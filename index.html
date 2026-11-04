@@ -1,21 +1,106 @@
 <!DOCTYPE html>
-<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f4efe6"><title>오목 한 판</title>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4efe6">
+<title>오목 한 판</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pretendard:wght@400;600;700&display=swap');
-:root{--bg:#f4efe6;--paper:#fffdf8;--ink:#292820;--muted:#888477;--line:#e7dfd1;--gold:#d9b77f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,sans-serif}.app{width:min(100% - 28px,520px);margin:auto;padding:24px 0 35px}.top{display:flex;justify-content:space-between;color:#9b7650;font-size:11px;letter-spacing:.16em;margin-bottom:25px}.pill{border:1px solid var(--line);border-radius:30px;padding:7px 10px;color:var(--muted);letter-spacing:0}h1{text-align:center;font:400 40px 'Gowun Batang',serif;margin:0}.sub{text-align:center;color:var(--muted);font-size:13px;margin:8px 0 24px}.status{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:15px;margin-bottom:13px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700}.muted{color:var(--muted);font-size:11px;font-weight:400}.board-wrap{padding:13px;background:linear-gradient(135deg,#e4c99c,#d4b17a);border-radius:18px;border:1px solid #c5a16c;box-shadow:0 12px 30px #6b4d241c}canvas{width:100%;height:auto;display:block;aspect-ratio:1;touch-action:manipulation}.note{text-align:center;color:#806743;font-size:10px;letter-spacing:.1em;margin-top:10px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}button,select{font:inherit;cursor:pointer}.actions button{border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:14px 8px;font-size:13px;font-weight:700;color:var(--ink)}.actions .primary{background:var(--ink);color:white;border-color:var(--ink)}.settings{text-align:center;margin-top:15px;color:var(--muted);font-size:12px}select{margin-left:7px;padding:8px;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink)}.help{margin-top:17px;padding:14px 16px;border-radius:13px;background:#eee7da;color:#777062;font-size:12px;line-height:1.7}.overlay{display:none;position:fixed;inset:0;background:#24221dcc;align-items:center;justify-content:center;padding:24px}.overlay.show{display:flex}.modal{background:var(--paper);border-radius:18px;padding:26px 22px;text-align:center;width:min(100%,340px)}.modal h2{font:28px 'Gowun Batang',serif}.modal p{font-size:13px;color:var(--muted);line-height:1.7}.modal button{width:100%;border:0;border-radius:11px;padding:14px;background:var(--ink);color:white;font-weight:700}.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,15px);opacity:0;background:#292820;color:white;border-radius:30px;padding:12px 18px;font-size:12px;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
-</style></head><body><main class="app"><div class="top"><b>A LITTLE GAME</b><span class="pill">1 PLAYER MODE</span></div><h1>오목 한 판</h1><p class="sub">잠깐의 여유, 다섯 알의 승부</p><div class="status"><span id="turn">● 내 차례예요</span><span class="muted" id="count">0수 진행</span></div><div class="board-wrap"><canvas id="board" width="750" height="750" aria-label="15줄 오목판"></canvas><div class="note">YOUR TURN · BLACK FIRST</div></div><div class="actions"><button id="undo">↶ 한 수 무르기</button><button class="primary" id="reset">새 게임 시작</button></div><div class="settings">컴퓨터 난이도 <select id="level"><option value="easy">가볍게</option><option value="normal" selected>보통</option><option value="hard">어렵게</option></select></div><div class="help"><b>게임 방법</b><br>검은 돌이 먼저 시작해요. 빈 교차점을 눌러 돌을 놓고, 가로·세로·대각선 중 한 방향으로 먼저 다섯 알을 연결하면 승리해요.</div></main><div class="overlay" id="overlay"><div class="modal"><h2 id="result">승리했어요!</h2><p id="desc">멋진 한 수였어요.</p><button id="again">다시 한 판</button></div></div><div class="toast" id="toast"></div>
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pretendard:wght@400;500;600;700;800&display=swap');
+:root{--bg:#f3eee4;--paper:#fffdf8;--ink:#292820;--muted:#888477;--line:#e7dfd1;--accent:#8b6742;--wood:#d8b77f;--wood-dark:#a97d49;--black:#262522;--white:#fffdf5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer}
+.app{width:min(100% - 28px,520px);margin:0 auto;padding:22px 0 34px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.brand{font:700 12px 'Gowun Batang',serif;letter-spacing:.18em;color:var(--accent)}
+.pill{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:7px 11px;border-radius:30px;background:#ffffff80}
+h1{font:400 clamp(30px,8vw,42px) 'Gowun Batang',serif;text-align:center;margin:0}
+.sub{text-align:center;color:var(--muted);font-size:13px;margin:9px 0 24px}
+.status-card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px 17px;margin-bottom:14px;box-shadow:0 5px 20px #55452a0a}
+.status-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.turn{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.stone{width:24px;height:24px;border-radius:50%;display:inline-block;flex:none;box-shadow:inset -3px -4px 5px #0002,0 2px 4px #0002}
+.stone.black{background:radial-gradient(circle at 32% 27%,#666 0,#292929 45%,#111 100%)}
+.stone.white{background:radial-gradient(circle at 32% 27%,#fff 0,#f4f0e7 55%,#d8d1c4 100%);border:1px solid #d5cdbf}
+.score{font-size:11px;color:var(--muted)}
+.board-wrap{background:linear-gradient(145deg,#ecd4a9 0%,#d9b77f 38%,#c99f66 100%);padding:13px;border-radius:19px;box-shadow:0 14px 34px #5d40251f,inset 0 2px 3px #fff9,inset 0 -4px 8px #80552c35;border:1px solid #b98d57;position:relative;overflow:hidden}.board-wrap:before{content:'';position:absolute;inset:4px;border:1px solid #fff5;border-radius:15px;pointer-events:none}
+canvas{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:manipulation;border-radius:7px}
+.board-note{text-align:center;color:#76532f;font-size:10px;letter-spacing:.08em;margin:11px 0 1px}.coach{display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:14px;box-shadow:0 5px 18px #55452a08}.coach-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:linear-gradient(145deg,#f1dfbf,#d7b17c);font-size:23px;box-shadow:inset 0 2px 4px #fff9,0 3px 8px #76532f20}.coach-name{font-size:11px;font-weight:800;color:var(--accent);margin-bottom:4px}.coach-message{font-size:12px;color:#625b4f;line-height:1.5}.win-line{animation:winPulse .75s ease-in-out infinite alternate}@keyframes winPulse{from{opacity:.55}to{opacity:1;filter:drop-shadow(0 0 8px #fff4a8)}}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.action{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:13px;padding:14px 10px;font-size:13px;font-weight:700;transition:.15s}
+.action:active{transform:scale(.98)}
+.action.primary{background:var(--ink);color:#fffdf7;border-color:var(--ink)}
+.settings{display:flex;justify-content:center;align-items:center;gap:9px;margin:15px 0 0;color:var(--muted);font-size:12px}
+select{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:9px;padding:8px 10px;font:inherit}
+.help{margin-top:18px;background:#eee7da;border-radius:14px;padding:14px 16px;color:#777062;font-size:12px;line-height:1.7}
+.help b{color:#514b40}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#292820;color:#fffdf7;border-radius:30px;padding:12px 18px;font-size:13px;white-space:nowrap;transition:.25s;box-shadow:0 6px 20px #0002;z-index:5}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.overlay{position:fixed;inset:0;background:#24221dcc;display:none;align-items:center;justify-content:center;padding:24px;z-index:10}
+.overlay.show{display:flex}
+.modal{width:min(100%,340px);background:var(--paper);border-radius:20px;padding:27px 22px;text-align:center;box-shadow:0 20px 60px #0004}
+.modal .big{font:400 28px 'Gowun Batang',serif;margin:0 0 9px}
+.modal p{font-size:13px;color:var(--muted);line-height:1.7;margin:0 0 20px}
+.modal button{width:100%;border:0;border-radius:12px;padding:14px;background:var(--ink);color:white;font-weight:700}
+@media(min-width:600px){.app{padding-top:34px}.board-wrap{padding:17px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="brand">A LITTLE GAME</div><div class="pill">1 PLAYER MODE</div></div>
+  <h1>오목 한 판</h1>
+  <p class="sub">잠깐의 여유, 다섯 알의 승부</p>
+  <section class="status-card"><div class="status-row"><div class="turn" id="turnLabel"><span class="stone black"></span><span>내 차례예요</span></div><div class="score" id="moveCount">0수 진행</div></div></section>
+  <div class="board-wrap"><canvas id="board" width="750" height="750" aria-label="15줄 오목판"></canvas><div class="board-note">YOUR TURN · BLACK FIRST</div></div>
+  <section class="coach" aria-live="polite"><div class="coach-avatar" id="coachAvatar">🦉</div><div><div class="coach-name">오목 친구 토리</div><div class="coach-message" id="coachMessage">안녕! 오늘은 내가 상대해 줄게. 첫 수를 놓아봐!</div></div></section>
+  <div class="actions"><button class="action" id="undoBtn">↶ 한 수 무르기</button><button class="action primary" id="restartBtn">새 게임 시작</button></div>
+  <div class="settings"><label for="level">컴퓨터 난이도</label><select id="level"><option value="easy">가볍게</option><option value="normal" selected>보통</option><option value="hard">어렵게</option></select></div>
+  <div class="help"><b>게임 방법</b><br>검은 돌이 먼저 시작해요. 빈 교차점을 눌러 돌을 놓고, 가로·세로·대각선 중 한 방향으로 먼저 다섯 알을 연결하면 승리해요.</div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="overlay" id="overlay"><div class="modal"><div class="big" id="resultTitle">승리!</div><p id="resultText">멋진 한 수였어요.</p><button id="againBtn">다시 한 판</button></div></div>
 <script>
-(()=>{const n=15,cv=document.querySelector('#board'),ctx=cv.getContext('2d'),pad=42,step=(750-84)/14,$=id=>document.getElementById(id);let b,ms,done,busy,last,timer;
-function init(){b=Array.from({length:n},()=>Array(n).fill(0));ms=[];done=busy=false;last=null;$('overlay').classList.remove('show');status();draw()}
-function status(){$('count').textContent=ms.length+'수 진행';$('turn').textContent=done?'대국이 끝났어요':busy?'○ 컴퓨터가 생각 중이에요':'● 내 차례예요'}
-function draw(){ctx.clearRect(0,0,750,750);ctx.fillStyle='#d9b77f';ctx.fillRect(0,0,750,750);ctx.strokeStyle='#76552e';ctx.lineWidth=1.5;for(let i=0;i<n;i++){let p=pad+i*step;ctx.beginPath();ctx.moveTo(pad,p);ctx.lineTo(708,p);ctx.stroke();ctx.beginPath();ctx.moveTo(p,pad);ctx.lineTo(p,708);ctx.stroke()}[3,7,11].forEach(r=>[3,7,11].forEach(c=>{ctx.beginPath();ctx.arc(pad+c*step,pad+r*step,4,0,7);ctx.fillStyle='#76552e';ctx.fill()}));for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(b[r][c]){let x=pad+c*step,y=pad+r*step,g=ctx.createRadialGradient(x-8,y-9,2,x,y,step*.44);if(b[r][c]===1){g.addColorStop(0,'#777');g.addColorStop(.4,'#333');g.addColorStop(1,'#101010')}else{g.addColorStop(0,'#fff');g.addColorStop(.7,'#f4f0e7');g.addColorStop(1,'#c9c1b3')}ctx.beginPath();ctx.arc(x,y,step*.43,0,7);ctx.fillStyle=g;ctx.fill();if(last&&last.r===r&&last.c===c){ctx.beginPath();ctx.arc(x,y,3.5,0,7);ctx.fillStyle=b[r][c]===1?'#f1e6cf':'#76664e';ctx.fill()}}}
-function win(r,c,col){return [[1,0],[0,1],[1,1],[1,-1]].some(([dr,dc])=>{let k=1;for(let s of [-1,1])for(let i=1;i<5;i++){let y=r+s*dr*i,x=c+s*dc*i;if(y<0||y>=n||x<0||x>=n||b[y][x]!==col)break;k++}return k>=5})}
-function end(col){done=true;busy=false;status();$('result').textContent=col===1?'승리했어요!':col===2?'컴퓨터 승리':'무승부';$('desc').textContent=col===1?'멋진 한 수였어요. 오늘의 오목 챔피언은 바로 당신!':'아쉽지만 괜찮아요. 한 판 더 도전해 볼까요?';setTimeout(()=>$('overlay').classList.add('show'),250)}
-function put(r,c,col){if(b[r][c]||done)return;b[r][c]=col;ms.push({r,c,col});last={r,c};draw();status();if(win(r,c,col)){end(col);return}if(ms.length===225){end(0)}}
-function score(r,c,col){let total=0;for(let[dr,dc]of [[1,0],[0,1],[1,1],[1,-1]]){let k=1,open=0;for(let s of [-1,1]){let y=r+s*dr,x=c+s*dc;while(y>=0&&y<n&&x>=0&&x<n&&b[y][x]===col){k++;y+=s*dr;x+=s*dc}if(y>=0&&y<n&&x>=0&&x<n&&!b[y][x])open++}total+=({1:2,2:12,3:90,4:1800,5:100000}[Math.min(k,5)]||0)*(open===2?1.2:open===1?1:.15)}return total}
-function ai(){if(done)return;let set=new Set();if(!ms.length)set.add('7,7');else ms.forEach(m=>{for(let dr=-2;dr<=2;dr++)for(let dc=-2;dc<=2;dc++){let r=m.r+dr,c=m.c+dc;if(r>=0&&r<n&&c>=0&&c<n&&!b[r][c])set.add(r+','+c)}});let best=null,bs=-1;for(let s of set){let[r,c]=s.split(',').map(Number);b[r][c]=2;let a=score(r,c,2);b[r][c]=1;let d=score(r,c,1);b[r][c]=0;let lv=$('level').value,v=a*1.05+d*(lv==='easy'?.75:lv==='normal'?1.02:1.18)+Math.random()*(lv==='hard'?3:lv==='easy'?90:35);if(v>bs){bs=v;best={r,c}}}if(best)put(best.r,best.c,2)}
-cv.addEventListener('pointerdown',e=>{if(done||busy)return;let rect=cv.getBoundingClientRect(),scale=750/rect.width,x=(e.clientX-rect.left)*scale,y=(e.clientY-rect.top)*scale,c=Math.round((x-pad)/step),r=Math.round((y-pad)/step);if(r<0||r>=n||c<0||c>=n||Math.hypot(x-pad-c*step,y-pad-r*step)>step*.48||b[r][c])return;put(r,c,1);if(!done){busy=true;status();timer=setTimeout(()=>{busy=false;ai()},350)}});
-$('undo').onclick=()=>{if(busy||done||!ms.length){toast('무를 수 있는 수가 없어요.');return}for(let i=0;i<Math.min(2,ms.length);i++){let m=ms.pop();b[m.r][m.c]=0}last=ms.at(-1)||null;draw();status();toast('한 수 되돌렸어요.')};
-$('reset').onclick=()=>{clearTimeout(timer);init();toast('새 게임을 시작해요.')};$('again').onclick=()=>{clearTimeout(timer);init()};
-function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(timer);timer=setTimeout(()=>$('toast').classList.remove('show'),1600)}init()})();
-</script></body></html>
+(() => {
+ const N=15, canvas=document.getElementById('board'), ctx=canvas.getContext('2d');
+ const pad=42, step=(canvas.width-pad*2)/(N-1);
+ let board, moves, over=false, thinking=false, last=null, animating=null, winLine=[];
+ const $=id=>document.getElementById(id);
+ function init(){board=Array.from({length:N},()=>Array(N).fill(0));moves=[];over=false;thinking=false;last=null;animating=null;winLine=[];$('overlay').classList.remove('show');$('coachAvatar').textContent='🦉';$('coachMessage').textContent='안녕! 오늘은 내가 상대해 줄게. 첫 수를 놓아봐!';updateStatus();draw();}
+ function draw(){
+   const w=canvas.width;ctx.clearRect(0,0,w,w);
+   const wood=ctx.createLinearGradient(0,0,w,w);wood.addColorStop(0,'#e6c895');wood.addColorStop(.48,'#d8b77f');wood.addColorStop(1,'#c99d63');ctx.fillStyle=wood;ctx.fillRect(0,0,w,w);
+   for(let i=0;i<34;i++){const y=(i*29+13)%w;ctx.beginPath();ctx.moveTo(0,y);ctx.bezierCurveTo(w*.28,y-7,w*.68,y+8,w,y-3);ctx.strokeStyle=i%3===0?'rgba(255,245,220,.13)':'rgba(112,73,34,.055)';ctx.lineWidth=i%4===0?2:1;ctx.stroke();}
+   ctx.strokeStyle='rgba(91,65,31,.72)';ctx.lineWidth=1.6;
+   for(let i=0;i<N;i++){const p=pad+i*step;ctx.beginPath();ctx.moveTo(pad,p);ctx.lineTo(w-pad,p);ctx.stroke();ctx.beginPath();ctx.moveTo(p,pad);ctx.lineTo(p,w-pad);ctx.stroke();}
+   [3,7,11].forEach(r=>[3,7,11].forEach(c=>{ctx.beginPath();ctx.arc(pad+c*step,pad+r*step,4.3,0,Math.PI*2);ctx.fillStyle='#76552e';ctx.fill();}));
+   for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(board[r][c])stone(r,c,board[r][c],last&&last.r===r&&last.c===c);
+   if(winLine.length){const a=winLine[0],b=winLine[winLine.length-1];ctx.save();ctx.beginPath();ctx.moveTo(pad+a.c*step,pad+a.r*step);ctx.lineTo(pad+b.c*step,pad+b.r*step);ctx.strokeStyle='rgba(255,246,180,.95)';ctx.lineWidth=step*.13;ctx.lineCap='round';ctx.shadowColor='#fff2a8';ctx.shadowBlur=18;ctx.stroke();ctx.restore();}
+ }
+ function stone(r,c,color,isLast){
+   const x=pad+c*step,y=pad+r*step,baseRad=step*.43;let scale=1;
+   if(animating&&animating.r===r&&animating.c===c){const t=Math.min(1,(performance.now()-animating.start)/190);scale=.18+(1-Math.pow(1-t,3))*.82;}
+   const rad=baseRad*scale;const g=ctx.createRadialGradient(x-rad*.32,y-rad*.36,rad*.08,x,y,rad*1.2);
+   if(color===1){g.addColorStop(0,'#777');g.addColorStop(.35,'#333');g.addColorStop(1,'#101010')}else{g.addColorStop(0,'#fff');g.addColorStop(.7,'#f4f0e7');g.addColorStop(1,'#c9c1b3')}
+   ctx.beginPath();ctx.arc(x,y,rad,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();ctx.strokeStyle=color===1?'#171717':'#c8c0b2';ctx.lineWidth=1.3;ctx.stroke();
+   if(isLast){ctx.beginPath();ctx.arc(x,y,4.2,0,Math.PI*2);ctx.fillStyle=color===1?'#f1e6cf':'#76664e';ctx.fill();}
+   if(animating&&animating.r===r&&animating.c===c&&performance.now()-animating.start<190){requestAnimationFrame(()=>draw());}
+ }
+ function updateStatus(){$('moveCount').textContent=moves.length+'수 진행';const label=$('turnLabel');if(over){label.innerHTML='<span>대국이 끝났어요</span>';return}if(thinking){label.innerHTML='<span class="stone white"></span><span>컴퓨터가 생각 중이에요</span>'}else label.innerHTML='<span class="stone black"></span><span>내 차례예요</span>';}
+ function place(r,c,color){if(board[r][c]||over)return false;board[r][c]=color;moves.push({r,c,color});last={r,c};animating={r,c,start:performance.now()};draw();updateStatus();requestAnimationFrame(function tick(){if(!animating)return;if(performance.now()-animating.start>=210){animating=null;draw();return}draw();requestAnimationFrame(tick)});if(color===1)react('player');if(checkWin(r,c,color)){finish(color);return true}if(moves.length===N*N){finish(0);return true}return true;}
+ function checkWin(r,c,color){const dirs=[[1,0],[0,1],[1,1],[1,-1]];for(const [dr,dc] of dirs){const line=[{r,c}];for(const sign of [-1,1])for(let k=1;k<5;k++){const y=r+dr*k*sign,x=c+dc*k*sign;if(y<0||y>=N||x<0||x>=N||board[y][x]!==color)break;if(sign===-1)line.unshift({r:y,c:x});else line.push({r:y,c:x});}if(line.length>=5){winLine=line.slice(0,5);draw();return true}}return false;}
+ function react(type){const messages={player:['오, 좋은 자리인데? 나도 집중해야겠어!','흠… 그쪽으로 이어가려는 거지?','좋은 수야! 하지만 아직 승부는 몰라.'],ai:['여기는 내가 먼저 차지할게!','이 수는 어때? 다음 수를 생각해 봐!','조금 고민했어. 이제 네 차례야!'],near:['앗, 오목이 될 뻔했어!','위험했어! 다음엔 더 조심해야겠다.']};const list=messages[type]||messages.player;$('coachMessage').textContent=list[Math.floor(Math.random()*list.length)];$('coachAvatar').textContent=type==='near'?'😳':'🦉';}
+ function finish(color){over=true;thinking=false;updateStatus();$('resultTitle').textContent=color===1?'승리했어요!':color===2?'컴퓨터 승리':'무승부';$('coachMessage').textContent=color===1?'와아! 완벽한 오목이야. 오늘은 네가 이겼어!':color===2?'후후, 이번 판은 내가 이겼네! 다시 도전해 볼래?':'정말 팽팽한 승부였어!';$('coachAvatar').textContent=color===1?'🎉':color===2?'😎':'🤝';$('resultText').textContent=color===1?'멋진 한 수였어요. 오늘의 오목 챔피언은 바로 당신!':color===2?'아쉽지만 괜찮아요. 한 판 더 도전해 볼까요?':'빈틈없는 대국이었어요.';setTimeout(()=>$('overlay').classList.add('show'),280);}
+ function evaluate(r,c,color){const dirs=[[1,0],[0,1],[1,1],[1,-1]];let total=0;for(const [dr,dc] of dirs){let count=1,open=0;for(const sign of [-1,1]){let y=r+dr*sign,x=c+dc*sign;while(y>=0&&y<N&&x>=0&&x<N&&board[y][x]===color){count++;y+=dr*sign;x+=dc*sign}if(y>=0&&y<N&&x>=0&&x<N&&board[y][x]===0)open++;}const scores={1:2,2:12,3:90,4:1800,5:100000};total+=(scores[Math.min(count,5)]||0)*(open===2?1.2:open===1?1:.15);}return total;}
+ function candidates(){const set=new Set();if(moves.length===0)return [{r:7,c:7}];for(const m of moves)for(let dr=-2;dr<=2;dr++)for(let dc=-2;dc<=2;dc++){const r=m.r+dr,c=m.c+dc;if(r>=0&&r<N&&c>=0&&c<N&&!board[r][c])set.add(r+','+c);}return [...set].map(s=>{const [r,c]=s.split(',').map(Number);return {r,c}});}
+ function aiMove(){if(over)return;const level=$('level').value,list=candidates();let best=null,bestScore=-Infinity;for(const p of list){board[p.r][p.c]=2;const attack=evaluate(p.r,p.c,2);board[p.r][p.c]=1;const defense=evaluate(p.r,p.c,1);board[p.r][p.c]=0;let score=attack*1.05+defense*(level==='easy'?.75:level==='normal'?1.02:1.18)+Math.random()*(level==='hard'?3:35);if(level==='easy')score=attack*.85+defense*.7+Math.random()*90;if(score>bestScore){bestScore=score;best=p;}}if(best){board[best.r][best.c]=2;const winsNow=checkWin(best.r,best.c,2);board[best.r][best.c]=0;react('ai');place(best.r,best.c,2);}}
+ function onTap(e){if(over||thinking)return;const rect=canvas.getBoundingClientRect(),scale=canvas.width/rect.width;const x=(e.clientX-rect.left)*scale,y=(e.clientY-rect.top)*scale;const c=Math.round((x-pad)/step),r=Math.round((y-pad)/step);if(r<0||r>=N||c<0||c>=N)return;const px=pad+c*step,py=pad+r*step;if(Math.hypot(x-px,y-py)>step*.48||board[r][c])return;place(r,c,1);if(!over){if(evaluate(r,c,1)>=1800)react('near');thinking=true;updateStatus();setTimeout(()=>{thinking=false;aiMove()},520);}}
+ canvas.addEventListener('pointerdown',onTap);
+ $('undoBtn').addEventListener('click',()=>{if(thinking||moves.length<1||over){toast('무를 수 있는 수가 없어요.');return}const count=moves.length>=2?2:1;for(let i=0;i<count;i++){const m=moves.pop();board[m.r][m.c]=0}last=moves.length?moves[moves.length-1]:null;winLine=[];draw();updateStatus();$('coachMessage').textContent='괜찮아, 다시 생각해 보자!';$('coachAvatar').textContent='🦉';toast('한 수 되돌렸어요.');});
+ $('restartBtn').addEventListener('click',()=>{init();toast('새 게임을 시작해요.')});$('againBtn').addEventListener('click',init);
+ let toastTimer;function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),1800)}
+ init();
+})();
+</script>
+</body>
+</html>
