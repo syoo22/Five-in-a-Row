@@ -1,119 +1,21 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#171817">
-  <title>OUR SECRET | 둘이서만 풀 수 있는 비밀</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pretendard:wght@300;400;500;600;700&display=swap');
-    :root{--ink:#e9e3d7;--muted:#a7a092;--gold:#c7a875;--bg:#171817;--line:rgba(218,197,158,.2)}
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,sans-serif;min-height:100vh}
-    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:radial-gradient(#d5c5a2 .6px,transparent .6px);background-size:5px 5px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
-    .wrap{width:min(100% - 40px,520px);margin:auto;min-height:100svh;display:flex;flex-direction:column;position:relative}
-    header{display:flex;justify-content:space-between;align-items:center;padding:26px 0}
-    .brand{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:600}
-    .status{font-size:10px;letter-spacing:.12em;color:#999486;border:1px solid var(--line);padding:7px 10px;border-radius:30px}
-    main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:28px 0 54px}
-    .eyebrow{font-size:10px;letter-spacing:.28em;color:var(--gold);text-align:center;margin-bottom:22px}
-    h1{font-family:'Gowun Batang',serif;font-size:clamp(48px,13vw,70px);font-weight:400;letter-spacing:.04em;line-height:1.05;text-align:center;margin:0}
-    .subtitle{text-align:center;color:#c2b9a8;font-family:'Gowun Batang',serif;font-size:15px;letter-spacing:.08em;margin:18px 0 0}
-    .scene{height:220px;margin:42px 0 36px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--line);background:linear-gradient(180deg,#252724 0%,#1b1d1b 100%);border-radius:3px}
-    .moon{position:absolute;width:88px;height:88px;border-radius:50%;background:#d4c4a0;opacity:.78;top:27px;right:19%;box-shadow:0 0 45px rgba(212,196,160,.18)}
-    .house{position:absolute;bottom:0;width:210px;height:126px;background:#34332d;clip-path:polygon(50% 0,100% 37%,94% 37%,94% 100%,6% 100%,6% 37%,0 37%);filter:drop-shadow(0 0 20px #000)}
-    .roof{position:absolute;bottom:115px;width:230px;height:90px;background:#494239;clip-path:polygon(50% 0,100% 100%,0 100%)}
-    .door{position:absolute;bottom:0;width:38px;height:72px;background:#171817;border:1px solid #8b7654;border-bottom:0;border-radius:20px 20px 0 0}
-    .window{position:absolute;bottom:55px;width:25px;height:31px;background:#b89a64;box-shadow:0 0 18px rgba(205,168,103,.45);border:3px solid #292823}
-    .window.left{left:calc(50% - 75px)}.window.right{right:calc(50% - 75px)}
-    .scene-caption{position:absolute;bottom:13px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.22em;color:#b6a98f}
-    .intro{text-align:center;color:var(--muted);font-size:13px;line-height:1.9;margin:0 auto 30px;max-width:330px;word-break:keep-all}
-    .actions{display:grid;gap:10px}
-    button{font:inherit;cursor:pointer;border-radius:2px;min-height:54px;letter-spacing:.08em;transition:.2s}
-    .primary{background:var(--gold);border:1px solid var(--gold);color:#1c1b18;font-weight:700}
-    .primary:active{transform:scale(.985);background:#d6bd91}
-    .secondary{background:transparent;border:1px solid var(--line);color:var(--ink)}
-    .secondary:active{background:#292923}
-    .notice{display:none;margin-top:14px;padding:15px;border:1px solid var(--line);background:#20211f;color:#c6bdad;font-size:12px;line-height:1.7;text-align:center}
-    .notice.show{display:block}
-    footer{text-align:center;padding:18px 0 26px;color:#77766e;font-size:9px;letter-spacing:.16em}
-    @media(min-height:800px){.scene{height:250px;margin-top:50px}}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header><div class="brand">A TWO-PLAYER MYSTERY</div><div class="status">CASE FILE 001</div></header>
-    <main>
-      <div class="eyebrow">THE SECRET BEGINS WITH TWO</div>
-      <h1>OUR<br>SECRET</h1>
-      <p class="subtitle">둘이서만 풀 수 있는 비밀</p>
-      <div class="scene" aria-label="달빛 아래 오래된 저택 일러스트">
-        <div class="moon"></div><div class="roof"></div><div class="house"></div>
-        <div class="window left"></div><div class="window right"></div><div class="door"></div>
-        <div class="scene-caption">THE OLD MANSION · 11:47 PM</div>
-      </div>
-      <p class="intro">한 사람에게는 보이지 않는 단서가,<br>다른 사람에게는 보이지 않는 진실이.<br>서로의 이야기를 모아 비밀을 밝혀내세요.</p>
-      <div class="actions">
-        <button class="primary" id="startBtn">사건 파일 열기</button>
-        <button class="secondary" id="howBtn">게임 방법</button>
-      </div>
-      <div class="notice" id="notice" role="status"></div>
-    </main>
-    <footer>ONE MYSTERY. TWO PLAYERS. ONE TRUTH.</footer>
-  </div>
-  <script>
-    const main = document.querySelector('main');
-    const homeContent = main.innerHTML;
-
-    function showHowTo() {
-      const notice = document.getElementById('notice');
-      notice.textContent = '1. 각자 휴대폰으로 같은 게임 방에 접속해요.  2. 서로 다른 단서를 확인해요.  3. 채팅으로 단서를 공유하고 함께 정답을 찾아요.';
-      notice.classList.add('show');
-    }
-
-    function openCase() {
-      main.innerHTML = `
-        <div class="eyebrow">CASE FILE 001</div>
-        <h1 style="font-size:clamp(34px,9vw,48px)">사라진<br>초대장</h1>
-        <p class="subtitle">THE MISSING INVITATION</p>
-        <div class="scene" style="height:190px;margin-top:34px">
-          <div class="moon"></div><div class="roof"></div><div class="house"></div>
-          <div class="window left"></div><div class="window right"></div><div class="door"></div>
-          <div class="scene-caption">THE OLD MANSION · 11:47 PM</div>
-        </div>
-        <div style="border:1px solid var(--line);background:#20211f;padding:22px 18px;margin:0 0 24px">
-          <div style="font-size:10px;letter-spacing:.2em;color:var(--gold);margin-bottom:12px">THE FIRST INCIDENT</div>
-          <p style="font-family:'Gowun Batang',serif;font-size:17px;line-height:1.9;color:var(--ink);margin:0;word-break:keep-all">
-            자정이 되기 전, 오래된 저택에 도착한 두 사람.<br>
-            문 앞에는 초대장이 놓여 있었지만, 정작 초대장을 보낸 사람은 사라지고 없었습니다.
-          </p>
-          <p style="font-size:12px;line-height:1.8;color:var(--muted);margin:16px 0 0;word-break:keep-all">
-            저택 곳곳에 흩어진 단서를 찾아보세요. 두 사람에게 주어지는 정보는 서로 다릅니다. 각자의 단서를 공유해야만 다음 문을 열 수 있습니다.
-          </p>
-        </div>
-        <div style="display:grid;gap:10px">
-          <button class="primary" id="prepareBtn">사건 살펴보기</button>
-          <button class="secondary" id="backBtn">처음으로 돌아가기</button>
-        </div>
-        <p id="caseNotice" class="notice" style="display:none"></p>
-      `;
-      document.getElementById('backBtn').addEventListener('click', () => {
-        main.innerHTML = homeContent;
-        bindHomeButtons();
-      });
-      document.getElementById('prepareBtn').addEventListener('click', () => {
-        const notice = document.getElementById('caseNotice');
-        notice.textContent = '사건의 탐색 화면을 준비하고 있어요. 현재는 사건 소개 화면까지 연결되어 있으며, 두 사람의 방 생성과 개별 단서 기능은 다음 단계에서 구현할 수 있어요.';
-        notice.style.display = 'block';
-      });
-    }
-
-    function bindHomeButtons() {
-      document.getElementById('startBtn').addEventListener('click', openCase);
-      document.getElementById('howBtn').addEventListener('click', showHowTo);
-    }
-
-    bindHomeButtons();
-  </script>
-</body>
-</html>
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f4efe6"><title>오목 한 판</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pretendard:wght@400;600;700&display=swap');
+:root{--bg:#f4efe6;--paper:#fffdf8;--ink:#292820;--muted:#888477;--line:#e7dfd1;--gold:#d9b77f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,sans-serif}.app{width:min(100% - 28px,520px);margin:auto;padding:24px 0 35px}.top{display:flex;justify-content:space-between;color:#9b7650;font-size:11px;letter-spacing:.16em;margin-bottom:25px}.pill{border:1px solid var(--line);border-radius:30px;padding:7px 10px;color:var(--muted);letter-spacing:0}h1{text-align:center;font:400 40px 'Gowun Batang',serif;margin:0}.sub{text-align:center;color:var(--muted);font-size:13px;margin:8px 0 24px}.status{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:15px;margin-bottom:13px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700}.muted{color:var(--muted);font-size:11px;font-weight:400}.board-wrap{padding:13px;background:linear-gradient(135deg,#e4c99c,#d4b17a);border-radius:18px;border:1px solid #c5a16c;box-shadow:0 12px 30px #6b4d241c}canvas{width:100%;height:auto;display:block;aspect-ratio:1;touch-action:manipulation}.note{text-align:center;color:#806743;font-size:10px;letter-spacing:.1em;margin-top:10px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}button,select{font:inherit;cursor:pointer}.actions button{border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:14px 8px;font-size:13px;font-weight:700;color:var(--ink)}.actions .primary{background:var(--ink);color:white;border-color:var(--ink)}.settings{text-align:center;margin-top:15px;color:var(--muted);font-size:12px}select{margin-left:7px;padding:8px;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink)}.help{margin-top:17px;padding:14px 16px;border-radius:13px;background:#eee7da;color:#777062;font-size:12px;line-height:1.7}.overlay{display:none;position:fixed;inset:0;background:#24221dcc;align-items:center;justify-content:center;padding:24px}.overlay.show{display:flex}.modal{background:var(--paper);border-radius:18px;padding:26px 22px;text-align:center;width:min(100%,340px)}.modal h2{font:28px 'Gowun Batang',serif}.modal p{font-size:13px;color:var(--muted);line-height:1.7}.modal button{width:100%;border:0;border-radius:11px;padding:14px;background:var(--ink);color:white;font-weight:700}.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,15px);opacity:0;background:#292820;color:white;border-radius:30px;padding:12px 18px;font-size:12px;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+</style></head><body><main class="app"><div class="top"><b>A LITTLE GAME</b><span class="pill">1 PLAYER MODE</span></div><h1>오목 한 판</h1><p class="sub">잠깐의 여유, 다섯 알의 승부</p><div class="status"><span id="turn">● 내 차례예요</span><span class="muted" id="count">0수 진행</span></div><div class="board-wrap"><canvas id="board" width="750" height="750" aria-label="15줄 오목판"></canvas><div class="note">YOUR TURN · BLACK FIRST</div></div><div class="actions"><button id="undo">↶ 한 수 무르기</button><button class="primary" id="reset">새 게임 시작</button></div><div class="settings">컴퓨터 난이도 <select id="level"><option value="easy">가볍게</option><option value="normal" selected>보통</option><option value="hard">어렵게</option></select></div><div class="help"><b>게임 방법</b><br>검은 돌이 먼저 시작해요. 빈 교차점을 눌러 돌을 놓고, 가로·세로·대각선 중 한 방향으로 먼저 다섯 알을 연결하면 승리해요.</div></main><div class="overlay" id="overlay"><div class="modal"><h2 id="result">승리했어요!</h2><p id="desc">멋진 한 수였어요.</p><button id="again">다시 한 판</button></div></div><div class="toast" id="toast"></div>
+<script>
+(()=>{const n=15,cv=document.querySelector('#board'),ctx=cv.getContext('2d'),pad=42,step=(750-84)/14,$=id=>document.getElementById(id);let b,ms,done,busy,last,timer;
+function init(){b=Array.from({length:n},()=>Array(n).fill(0));ms=[];done=busy=false;last=null;$('overlay').classList.remove('show');status();draw()}
+function status(){$('count').textContent=ms.length+'수 진행';$('turn').textContent=done?'대국이 끝났어요':busy?'○ 컴퓨터가 생각 중이에요':'● 내 차례예요'}
+function draw(){ctx.clearRect(0,0,750,750);ctx.fillStyle='#d9b77f';ctx.fillRect(0,0,750,750);ctx.strokeStyle='#76552e';ctx.lineWidth=1.5;for(let i=0;i<n;i++){let p=pad+i*step;ctx.beginPath();ctx.moveTo(pad,p);ctx.lineTo(708,p);ctx.stroke();ctx.beginPath();ctx.moveTo(p,pad);ctx.lineTo(p,708);ctx.stroke()}[3,7,11].forEach(r=>[3,7,11].forEach(c=>{ctx.beginPath();ctx.arc(pad+c*step,pad+r*step,4,0,7);ctx.fillStyle='#76552e';ctx.fill()}));for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(b[r][c]){let x=pad+c*step,y=pad+r*step,g=ctx.createRadialGradient(x-8,y-9,2,x,y,step*.44);if(b[r][c]===1){g.addColorStop(0,'#777');g.addColorStop(.4,'#333');g.addColorStop(1,'#101010')}else{g.addColorStop(0,'#fff');g.addColorStop(.7,'#f4f0e7');g.addColorStop(1,'#c9c1b3')}ctx.beginPath();ctx.arc(x,y,step*.43,0,7);ctx.fillStyle=g;ctx.fill();if(last&&last.r===r&&last.c===c){ctx.beginPath();ctx.arc(x,y,3.5,0,7);ctx.fillStyle=b[r][c]===1?'#f1e6cf':'#76664e';ctx.fill()}}}
+function win(r,c,col){return [[1,0],[0,1],[1,1],[1,-1]].some(([dr,dc])=>{let k=1;for(let s of [-1,1])for(let i=1;i<5;i++){let y=r+s*dr*i,x=c+s*dc*i;if(y<0||y>=n||x<0||x>=n||b[y][x]!==col)break;k++}return k>=5})}
+function end(col){done=true;busy=false;status();$('result').textContent=col===1?'승리했어요!':col===2?'컴퓨터 승리':'무승부';$('desc').textContent=col===1?'멋진 한 수였어요. 오늘의 오목 챔피언은 바로 당신!':'아쉽지만 괜찮아요. 한 판 더 도전해 볼까요?';setTimeout(()=>$('overlay').classList.add('show'),250)}
+function put(r,c,col){if(b[r][c]||done)return;b[r][c]=col;ms.push({r,c,col});last={r,c};draw();status();if(win(r,c,col)){end(col);return}if(ms.length===225){end(0)}}
+function score(r,c,col){let total=0;for(let[dr,dc]of [[1,0],[0,1],[1,1],[1,-1]]){let k=1,open=0;for(let s of [-1,1]){let y=r+s*dr,x=c+s*dc;while(y>=0&&y<n&&x>=0&&x<n&&b[y][x]===col){k++;y+=s*dr;x+=s*dc}if(y>=0&&y<n&&x>=0&&x<n&&!b[y][x])open++}total+=({1:2,2:12,3:90,4:1800,5:100000}[Math.min(k,5)]||0)*(open===2?1.2:open===1?1:.15)}return total}
+function ai(){if(done)return;let set=new Set();if(!ms.length)set.add('7,7');else ms.forEach(m=>{for(let dr=-2;dr<=2;dr++)for(let dc=-2;dc<=2;dc++){let r=m.r+dr,c=m.c+dc;if(r>=0&&r<n&&c>=0&&c<n&&!b[r][c])set.add(r+','+c)}});let best=null,bs=-1;for(let s of set){let[r,c]=s.split(',').map(Number);b[r][c]=2;let a=score(r,c,2);b[r][c]=1;let d=score(r,c,1);b[r][c]=0;let lv=$('level').value,v=a*1.05+d*(lv==='easy'?.75:lv==='normal'?1.02:1.18)+Math.random()*(lv==='hard'?3:lv==='easy'?90:35);if(v>bs){bs=v;best={r,c}}}if(best)put(best.r,best.c,2)}
+cv.addEventListener('pointerdown',e=>{if(done||busy)return;let rect=cv.getBoundingClientRect(),scale=750/rect.width,x=(e.clientX-rect.left)*scale,y=(e.clientY-rect.top)*scale,c=Math.round((x-pad)/step),r=Math.round((y-pad)/step);if(r<0||r>=n||c<0||c>=n||Math.hypot(x-pad-c*step,y-pad-r*step)>step*.48||b[r][c])return;put(r,c,1);if(!done){busy=true;status();timer=setTimeout(()=>{busy=false;ai()},350)}});
+$('undo').onclick=()=>{if(busy||done||!ms.length){toast('무를 수 있는 수가 없어요.');return}for(let i=0;i<Math.min(2,ms.length);i++){let m=ms.pop();b[m.r][m.c]=0}last=ms.at(-1)||null;draw();status();toast('한 수 되돌렸어요.')};
+$('reset').onclick=()=>{clearTimeout(timer);init();toast('새 게임을 시작해요.')};$('again').onclick=()=>{clearTimeout(timer);init()};
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(timer);timer=setTimeout(()=>$('toast').classList.remove('show'),1600)}init()})();
+</script></body></html>
