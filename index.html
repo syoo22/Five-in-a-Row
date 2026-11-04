@@ -72,7 +72,7 @@ select{border:1px solid var(--line);background:var(--paper);color:var(--ink);bor
  function saveStats(){try{localStorage.setItem('toriOmokStats',JSON.stringify(stats))}catch(e){}renderStats()}
  function renderStats(){$('winsPlayer').textContent=stats.player;$('winsTori').textContent=stats.tori;$('draws').textContent=stats.draw;$('totalGames').textContent=stats.player+stats.tori+stats.draw}
  function playStoneSound(color){if(!soundOn)return;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();const t=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.setValueAtTime(color===1?185:225,t);o.frequency.exponentialRampToValueAtTime(82,t+.075);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.13,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+.12);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+.13)}catch(e){}}
- function avatarMood(emoji,celebrate=false){const a=$('coachAvatar');a.textContent=emoji;a.classList.remove('bounce','win');void a.offsetWidth;a.classList.add(celebrate?'win':'bounce')}
+ function avatarMood(emoji,celebrate=false){const a=$('coachAvatar');a.textContent='🦉';a.classList.remove('bounce','win');void a.offsetWidth;a.classList.add(celebrate?'win':'bounce')}
  const $=id=>document.getElementById(id);
  function init(){board=Array.from({length:N},()=>Array(N).fill(0));moves=[];resultSaved=false;over=false;thinking=false;last=null;animating=null;winLine=[];$('overlay').classList.remove('show');$('coachAvatar').textContent='🦉';$('coachMessage').textContent='안녕! 오늘은 내가 상대해 줄게. 첫 수를 놓아봐!';updateStatus();draw();}
  function draw(){
