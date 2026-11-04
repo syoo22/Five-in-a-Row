@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#171817">
+  <title>OUR SECRET | 둘이서만 풀 수 있는 비밀</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pretendard:wght@300;400;500;600;700&display=swap');
+    :root{--ink:#e9e3d7;--muted:#a7a092;--gold:#c7a875;--bg:#171817;--line:rgba(218,197,158,.2)}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,sans-serif;min-height:100vh}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:radial-gradient(#d5c5a2 .6px,transparent .6px);background-size:5px 5px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+    .wrap{width:min(100% - 40px,520px);margin:auto;min-height:100svh;display:flex;flex-direction:column;position:relative}
+    header{display:flex;justify-content:space-between;align-items:center;padding:26px 0}
+    .brand{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:600}
+    .status{font-size:10px;letter-spacing:.12em;color:#999486;border:1px solid var(--line);padding:7px 10px;border-radius:30px}
+    main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:28px 0 54px}
+    .eyebrow{font-size:10px;letter-spacing:.28em;color:var(--gold);text-align:center;margin-bottom:22px}
+    h1{font-family:'Gowun Batang',serif;font-size:clamp(48px,13vw,70px);font-weight:400;letter-spacing:.04em;line-height:1.05;text-align:center;margin:0}
+    .subtitle{text-align:center;color:#c2b9a8;font-family:'Gowun Batang',serif;font-size:15px;letter-spacing:.08em;margin:18px 0 0}
+    .scene{height:220px;margin:42px 0 36px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--line);background:linear-gradient(180deg,#252724 0%,#1b1d1b 100%);border-radius:3px}
+    .moon{position:absolute;width:88px;height:88px;border-radius:50%;background:#d4c4a0;opacity:.78;top:27px;right:19%;box-shadow:0 0 45px rgba(212,196,160,.18)}
+    .house{position:absolute;bottom:0;width:210px;height:126px;background:#34332d;clip-path:polygon(50% 0,100% 37%,94% 37%,94% 100%,6% 100%,6% 37%,0 37%);filter:drop-shadow(0 0 20px #000)}
+    .roof{position:absolute;bottom:115px;width:230px;height:90px;background:#494239;clip-path:polygon(50% 0,100% 100%,0 100%)}
+    .door{position:absolute;bottom:0;width:38px;height:72px;background:#171817;border:1px solid #8b7654;border-bottom:0;border-radius:20px 20px 0 0}
+    .window{position:absolute;bottom:55px;width:25px;height:31px;background:#b89a64;box-shadow:0 0 18px rgba(205,168,103,.45);border:3px solid #292823}
+    .window.left{left:calc(50% - 75px)}.window.right{right:calc(50% - 75px)}
+    .scene-caption{position:absolute;bottom:13px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.22em;color:#b6a98f}
+    .intro{text-align:center;color:var(--muted);font-size:13px;line-height:1.9;margin:0 auto 30px;max-width:330px;word-break:keep-all}
+    .actions{display:grid;gap:10px}
+    button{font:inherit;cursor:pointer;border-radius:2px;min-height:54px;letter-spacing:.08em;transition:.2s}
+    .primary{background:var(--gold);border:1px solid var(--gold);color:#1c1b18;font-weight:700}
+    .primary:active{transform:scale(.985);background:#d6bd91}
+    .secondary{background:transparent;border:1px solid var(--line);color:var(--ink)}
+    .secondary:active{background:#292923}
+    .notice{display:none;margin-top:14px;padding:15px;border:1px solid var(--line);background:#20211f;color:#c6bdad;font-size:12px;line-height:1.7;text-align:center}
+    .notice.show{display:block}
+    footer{text-align:center;padding:18px 0 26px;color:#77766e;font-size:9px;letter-spacing:.16em}
+    @media(min-height:800px){.scene{height:250px;margin-top:50px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header><div class="brand">A TWO-PLAYER MYSTERY</div><div class="status">CASE FILE 001</div></header>
+    <main>
+      <div class="eyebrow">THE SECRET BEGINS WITH TWO</div>
+      <h1>OUR<br>SECRET</h1>
+      <p class="subtitle">둘이서만 풀 수 있는 비밀</p>
+      <div class="scene" aria-label="달빛 아래 오래된 저택 일러스트">
+        <div class="moon"></div><div class="roof"></div><div class="house"></div>
+        <div class="window left"></div><div class="window right"></div><div class="door"></div>
+        <div class="scene-caption">THE OLD MANSION · 11:47 PM</div>
+      </div>
+      <p class="intro">한 사람에게는 보이지 않는 단서가,<br>다른 사람에게는 보이지 않는 진실이.<br>서로의 이야기를 모아 비밀을 밝혀내세요.</p>
+      <div class="actions">
+        <button class="primary" id="startBtn">사건 파일 열기</button>
+        <button class="secondary" id="howBtn">게임 방법</button>
+      </div>
+      <div class="notice" id="notice" role="status"></div>
+    </main>
+    <footer>ONE MYSTERY. TWO PLAYERS. ONE TRUTH.</footer>
+  </div>
+  <script>
+    const notice = document.getElementById('notice');
+    document.getElementById('startBtn').addEventListener('click', () => {
+      notice.textContent = '첫 번째 사건을 준비하고 있어요. 두 사람이 각자의 휴대폰에서 접속할 수 있도록 방 생성과 실시간 동기화 기능을 다음 단계에서 연결할 예정이에요.';
+      notice.classList.add('show');
+    });
+    document.getElementById('howBtn').addEventListener('click', () => {
+      notice.textContent = '1. 각자 휴대폰으로 같은 게임 방에 접속해요.  2. 서로 다른 단서를 확인해요.  3. 채팅으로 단서를 공유하고 함께 정답을 찾아요.';
+      notice.classList.add('show');
+    });
+  </script>
+</body>
+</html>
